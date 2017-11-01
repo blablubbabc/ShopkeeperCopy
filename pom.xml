@@ -42,7 +42,6 @@
 		<directory>target</directory>
 		<resources>
 			<resource>
-				<targetPath>.</targetPath>
 				<filtering>true</filtering>
 				<directory>src/main/resources</directory>
 				<includes>
@@ -50,7 +49,6 @@
 				</includes>
 			</resource>
 			<resource>
-				<targetPath>.</targetPath>
 				<directory>${basedir}/</directory>
 				<includes>
 					<include>LICENSE</include>
