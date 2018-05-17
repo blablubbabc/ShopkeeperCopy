@@ -31,7 +31,7 @@
 		<dependency>
 			<groupId>com.nisovin.shopkeepers</groupId>
 			<artifactId>Shopkeepers</artifactId>
-			<version>1.83</version>
+			<version>1.87-SNAPSHOT</version>
 		</dependency>
 	</dependencies>
 

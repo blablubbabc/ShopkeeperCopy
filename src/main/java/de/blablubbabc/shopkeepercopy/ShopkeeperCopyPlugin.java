@@ -14,6 +14,7 @@ import com.nisovin.shopkeepers.ShopCreationData;
 import com.nisovin.shopkeepers.Shopkeeper;
 import com.nisovin.shopkeepers.ShopkeepersPlugin;
 import com.nisovin.shopkeepers.shoptypes.AdminShopkeeper;
+import com.nisovin.shopkeepers.shoptypes.offers.TradingOffer;
 
 public class ShopkeeperCopyPlugin extends JavaPlugin {
 
@@ -74,7 +75,9 @@ public class ShopkeeperCopyPlugin extends JavaPlugin {
 		}
 
 		// copy offers:
-		newShop.getRecipes().addAll(sourceAdminShop.getRecipes());
+		for (TradingOffer offer : sourceAdminShop.getOffers()) {
+			newShop.addOffer(offer.getResultItem(), offer.getItem1(), offer.getItem2());
+		}
 
 		newShop.setName(sourceAdminShop.getName());
 		newShop.setTradePermission(sourceAdminShop.getTradePremission());
