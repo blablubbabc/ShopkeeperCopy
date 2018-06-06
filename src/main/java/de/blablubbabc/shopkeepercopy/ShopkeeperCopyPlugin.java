@@ -10,9 +10,10 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import com.nisovin.shopkeepers.ShopCreationData;
-import com.nisovin.shopkeepers.Shopkeeper;
-import com.nisovin.shopkeepers.ShopkeepersPlugin;
+import com.nisovin.shopkeepers.api.ShopCreationData;
+import com.nisovin.shopkeepers.api.Shopkeeper;
+import com.nisovin.shopkeepers.api.ShopkeepersPlugin;
+import com.nisovin.shopkeepers.api.registry.ShopkeeperRegistry;
 import com.nisovin.shopkeepers.shoptypes.AdminShopkeeper;
 import com.nisovin.shopkeepers.shoptypes.offers.TradingOffer;
 
@@ -68,7 +69,7 @@ public class ShopkeeperCopyPlugin extends JavaPlugin {
 		Location spawnLocation = new Location(world, x, y, z);
 
 		// note: might not work properly for sign shops, due to unknown facing, and facing being off at target location
-		AdminShopkeeper newShop = (AdminShopkeeper) shopkeepersPlugin.createNewAdminShopkeeper(new ShopCreationData(null, sourceShop.getType(), sourceShop.getShopObject().getObjectType(), spawnLocation, null));
+		AdminShopkeeper newShop = (AdminShopkeeper) shopkeepersPlugin.createShopkeeper(ShopCreationData.create(null, sourceShop.getType(), sourceShop.getShopObject().getObjectType(), spawnLocation, null));
 		if (newShop == null) {
 			sender.sendMessage(ChatColor.RED + "Could not create admin shopkeeper! Check the server log for issues!");
 			return true;
@@ -84,7 +85,7 @@ public class ShopkeeperCopyPlugin extends JavaPlugin {
 		// TODO copy other shop data, especially shop object data
 
 		// save:
-		shopkeepersPlugin.save();
+		shopkeepersPlugin.getShopkeeperStorage().save();
 
 		sender.sendMessage(ChatColor.GREEN + "Shopkeeper copy created!");
 
@@ -101,6 +102,7 @@ public class ShopkeeperCopyPlugin extends JavaPlugin {
 
 	private Shopkeeper getShopkeeper(ShopkeepersPlugin plugin, String shopIdArg) {
 		if (shopIdArg == null) return null;
+		ShopkeeperRegistry shopkeeperRegistry = plugin.getShopkeeperRegistry();
 
 		// check if the argument is an uuid:
 		UUID shopUniqueId = null;
@@ -111,7 +113,7 @@ public class ShopkeeperCopyPlugin extends JavaPlugin {
 		}
 
 		if (shopUniqueId != null) {
-			return plugin.getShopkeeper(shopUniqueId);
+			return shopkeeperRegistry.getShopkeeper(shopUniqueId);
 		}
 
 		// check if the argument is an integer:
@@ -123,10 +125,10 @@ public class ShopkeeperCopyPlugin extends JavaPlugin {
 		}
 
 		if (shopSessionId != -1) {
-			return plugin.getShopkeeper(shopSessionId);
+			return shopkeeperRegistry.getShopkeeper(shopSessionId);
 		}
 
 		// try to get shopkeeper by name:
-		return plugin.getShopkeeperByName(shopIdArg);
+		return shopkeeperRegistry.getShopkeeperByName(shopIdArg);
 	}
 }

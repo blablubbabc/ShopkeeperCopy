@@ -17,8 +17,12 @@
 			<url>https://hub.spigotmc.org/nexus/content/groups/public/</url>
 		</repository>
 		<repository>
-			<id>Cube-Nation Nexus</id>
-			<url>http://nexus3.cube-nation.de/repository/maven-public/</url>
+			<id>de.cube-nation.nexus.release</id>
+			<url>http://nexus3.cube-nation.de/repository/releases</url>
+		</repository>
+		<repository>
+			<id>de.cube-nation.nexus.snapshot</id>
+			<url>http://nexus3.cube-nation.de/repository/snapshots</url>
 		</repository>
 	</repositories>
 
@@ -31,7 +35,7 @@
 		<dependency>
 			<groupId>com.nisovin.shopkeepers</groupId>
 			<artifactId>Shopkeepers</artifactId>
-			<version>1.87-SNAPSHOT</version>
+			<version>2.0.1-SNAPSHOT</version>
 		</dependency>
 	</dependencies>
 
@@ -64,8 +68,6 @@
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>3.5.1</version>
-				<configuration>
-				</configuration>
 			</plugin>
 		</plugins>
 	</build>
