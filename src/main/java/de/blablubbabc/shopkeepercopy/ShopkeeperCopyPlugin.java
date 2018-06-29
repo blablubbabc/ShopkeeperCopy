@@ -10,12 +10,13 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import com.nisovin.shopkeepers.api.ShopCreationData;
-import com.nisovin.shopkeepers.api.Shopkeeper;
 import com.nisovin.shopkeepers.api.ShopkeepersPlugin;
-import com.nisovin.shopkeepers.api.registry.ShopkeeperRegistry;
-import com.nisovin.shopkeepers.shoptypes.AdminShopkeeper;
-import com.nisovin.shopkeepers.shoptypes.offers.TradingOffer;
+import com.nisovin.shopkeepers.api.shopkeeper.ShopCreationData;
+import com.nisovin.shopkeepers.api.shopkeeper.Shopkeeper;
+import com.nisovin.shopkeepers.api.shopkeeper.ShopkeeperCreateException;
+import com.nisovin.shopkeepers.api.shopkeeper.ShopkeeperRegistry;
+import com.nisovin.shopkeepers.shopkeeper.admin.AdminShopkeeper;
+import com.nisovin.shopkeepers.shopkeeper.offers.TradingOffer;
 
 public class ShopkeeperCopyPlugin extends JavaPlugin {
 
@@ -69,11 +70,14 @@ public class ShopkeeperCopyPlugin extends JavaPlugin {
 		Location spawnLocation = new Location(world, x, y, z);
 
 		// note: might not work properly for sign shops, due to unknown facing, and facing being off at target location
-		AdminShopkeeper newShop = (AdminShopkeeper) shopkeepersPlugin.createShopkeeper(ShopCreationData.create(null, sourceShop.getType(), sourceShop.getShopObject().getObjectType(), spawnLocation, null));
-		if (newShop == null) {
-			sender.sendMessage(ChatColor.RED + "Could not create admin shopkeeper! Check the server log for issues!");
+		AdminShopkeeper newShop;
+		try {
+			newShop = (AdminShopkeeper) shopkeepersPlugin.getShopkeeperRegistry().createShopkeeper(ShopCreationData.create(null, sourceShop.getType(), sourceShop.getShopObject().getType(), spawnLocation, null));
+		} catch (ShopkeeperCreateException e) {
+			sender.sendMessage(ChatColor.RED + "Could not create admin shopkeeper: " + e.getMessage());
 			return true;
 		}
+		assert newShop != null;
 
 		// copy offers:
 		for (TradingOffer offer : sourceAdminShop.getOffers()) {
@@ -113,19 +117,19 @@ public class ShopkeeperCopyPlugin extends JavaPlugin {
 		}
 
 		if (shopUniqueId != null) {
-			return shopkeeperRegistry.getShopkeeper(shopUniqueId);
+			return shopkeeperRegistry.getShopkeeperByUniqueId(shopUniqueId);
 		}
 
 		// check if the argument is an integer:
-		int shopSessionId = -1;
+		int shopId = -1;
 		try {
-			shopSessionId = Integer.parseInt(shopIdArg);
+			shopId = Integer.parseInt(shopIdArg);
 		} catch (NumberFormatException e) {
 			// invalid integer
 		}
 
-		if (shopSessionId != -1) {
-			return shopkeeperRegistry.getShopkeeper(shopSessionId);
+		if (shopId != -1) {
+			return shopkeeperRegistry.getShopkeeperById(shopId);
 		}
 
 		// try to get shopkeeper by name:
