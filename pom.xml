@@ -19,10 +19,16 @@
 		<repository>
 			<id>de.cube-nation.nexus.release</id>
 			<url>http://nexus3.cube-nation.de/repository/releases</url>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
 		</repository>
 		<repository>
 			<id>de.cube-nation.nexus.snapshot</id>
 			<url>http://nexus3.cube-nation.de/repository/snapshots</url>
+			<releases>
+				<enabled>false</enabled>
+			</releases>
 		</repository>
 	</repositories>
 
